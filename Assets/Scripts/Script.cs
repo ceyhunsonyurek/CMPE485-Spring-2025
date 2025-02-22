@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class Script : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public Rigidbody rb;
+    public float forceAmount = 5f;
+
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        rb.AddForce(Vector3.up * forceAmount);
     }
 }
