@@ -1,6 +1,9 @@
 ﻿
 using UnityEditor.VersionControl;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 /*
     This file has a commented version with details about how each line works. 
@@ -35,6 +38,10 @@ public class ThirdPersonController : MonoBehaviour
     bool isSprinting = false;
     bool isCrouching = false;
 
+    [Header("Game State")]
+    public bool isGameOver = false;
+    public bool isDead = false;
+
     // Inputs
     float inputHorizontal;
     float inputVertical;
@@ -44,6 +51,7 @@ public class ThirdPersonController : MonoBehaviour
 
     Animator animator;
     CharacterController cc;
+    public string trapTag = "Trap";
 
 
     void Start()
@@ -60,6 +68,9 @@ public class ThirdPersonController : MonoBehaviour
     // Update is only being used here to identify keys and trigger animations
     void Update()
     {
+
+        if (isGameOver || isDead)
+            return;
 
         // Input checkers
         inputHorizontal = Input.GetAxis("Horizontal");
@@ -112,6 +123,9 @@ public class ThirdPersonController : MonoBehaviour
     // With the inputs and animations defined, FixedUpdate is responsible for applying movements and actions to the player
     private void FixedUpdate()
     {
+
+        if (isGameOver || isDead)
+            return;
 
         // Sprinting velocity boost or crounching desacelerate
         float velocityAdittion = 0;
@@ -195,6 +209,88 @@ public class ThirdPersonController : MonoBehaviour
             jumpElapsedTime = 0;
             isJumping = false;
         }
+    }
+
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+
+        if (hit.collider.gameObject.tag == "Trap")
+        {
+            Die();
+        }
+
+        Rigidbody rb = hit.collider.attachedRigidbody;
+
+        // If we hit an object with a rigidbody (like our key)
+        if (rb != null && !rb.isKinematic)
+        {
+            // Calculate push direction from move direction
+            Vector3 pushDirection = hit.moveDirection;
+
+            // Apply the push with some force multiplier
+            rb.AddForce(pushDirection * 2.0f, ForceMode.Impulse);
+        }
+    }
+
+
+    public void Die()
+    {
+        if (!isDead)
+        {
+            isDead = true;
+            Debug.Log("Player died!");
+
+            // Show game over UI after a short delay
+            StartCoroutine(ShowGameOverUI(1.5f));
+        }
+    }
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Collided with" + collision.gameObject.name);
+        // Check if the saw blade collided with the player
+        if (collision.gameObject.CompareTag(trapTag))
+        {
+            Die();
+        }
+    }
+
+    public void WinGame()
+    {
+        if (!isGameOver)
+        {
+            isGameOver = true;
+            Debug.Log("Player won!");
+
+            // Show win UI after a short delay
+            StartCoroutine(ShowWinUI(1.0f));
+        }
+    }
+
+    IEnumerator ShowGameOverUI(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // Enable the game over UI here
+        UIManager.Instance.ShowGameOverScreen();
+
+        // Unlock cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    IEnumerator ShowWinUI(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // Enable the win UI here
+        UIManager.Instance.ShowWinScreen();
+
+        // Unlock cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
 }
