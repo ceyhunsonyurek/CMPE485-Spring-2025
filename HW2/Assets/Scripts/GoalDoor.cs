@@ -28,19 +28,7 @@ public class GoalDoor : MonoBehaviour
 
     void Update()
     {
-        // Check if the game is over by looking at the time scale
-        // This works because the KeyPhysics script sets Time.timeScale = 0 when the game ends
-        if (Time.timeScale == 0 && !hasStartedMoving)
-        {
-            StartCoroutine(MoveWallDown());
-            hasStartedMoving = true;
-        }
-    }
-
-    // This function can be called directly from other scripts
-    public void TriggerWallMovement()
-    {
-        if (!hasStartedMoving)
+        if (Time.timeScale == 0.7f && !hasStartedMoving)
         {
             StartCoroutine(MoveWallDown());
             hasStartedMoving = true;

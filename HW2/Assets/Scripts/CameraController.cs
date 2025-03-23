@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour
     public bool canZoom = true;
     [Space]
     [Tooltip("The higher it is, the faster the camera moves. It is recommended to increase this value for games that uses joystick.")]
-    public float sensitivity = 5f;
+    public float sensitivity = 8f;
 
     [Tooltip("Camera Y rotation limits. The X axis is the maximum it can go up and the Y axis is the maximum it can go down.")]
     public Vector2 cameraLimit = new Vector2(-50, 30);

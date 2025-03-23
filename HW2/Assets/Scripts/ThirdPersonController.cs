@@ -240,9 +240,6 @@ public class ThirdPersonController : MonoBehaviour
         {
             isDead = true;
             Debug.Log("Player died!");
-
-            // Show game over UI after a short delay
-            StartCoroutine(ShowGameOverUI(1.5f));
         }
     }
 
@@ -262,34 +259,6 @@ public class ThirdPersonController : MonoBehaviour
         {
             isGameOver = true;
             Debug.Log("Player won!");
-
-            // Show win UI after a short delay
-            StartCoroutine(ShowWinUI(1.0f));
         }
     }
-
-    IEnumerator ShowGameOverUI(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        // Enable the game over UI here
-        UIManager.Instance.ShowGameOverScreen();
-
-        // Unlock cursor
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    IEnumerator ShowWinUI(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        // Enable the win UI here
-        UIManager.Instance.ShowWinScreen();
-
-        // Unlock cursor
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
 }

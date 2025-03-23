@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,11 +8,9 @@ public class KeyPhysics : MonoBehaviour
     [Tooltip("Tag of the door object")]
     public string doorTag = "Door";
 
-    [Tooltip("Optional game over UI to activate")]
-    public GameObject gameOverUI;
+    private bool hasGameEnded = false;
 
-    [Tooltip("Optional win message text")]
-    public UnityEngine.UI.Text winMessageText;
+    public GameOverUI gameOverUI;
 
     private Rigidbody rb;
 
@@ -38,43 +37,28 @@ public class KeyPhysics : MonoBehaviour
         }
     }
 
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(2);
+
+        gameOverUI.Setup("You Won!", "Play Again");
+
+        // AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameOverScene");
+        // while (!asyncLoad.isDone) { yield return null; }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         // Check if the key collided with the door
         if (collision.gameObject.CompareTag(doorTag))
         {
-            // Show game over UI if available
-            if (gameOverUI != null)
+            if (!hasGameEnded)
             {
-                gameOverUI.SetActive(true);
+                hasGameEnded = true;
+                Time.timeScale = 0.7f;
+                StartCoroutine(Wait());
             }
-
-            // Show win message if text component is available
-            if (winMessageText != null)
-            {
-                winMessageText.text = "You Won! The key reached the door.";
-            }
-
-            // Option 1: Freeze the game but don't reload
-            Time.timeScale = 0;
-
-            // Option 2: Reload the current scene after a delay
-            // Invoke("ReloadScene", 2.0f);
-
-            // Option 3: Load a specific scene
-            // Invoke("LoadGameOverScene", 2.0f);
         }
-    }
-
-    void ReloadScene()
-    {
-        Time.timeScale = 1; // Reset time scale
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    void LoadGameOverScene()
-    {
-        Time.timeScale = 1; // Reset time scale
-        SceneManager.LoadScene("GameOverScene"); // Replace with your scene name
     }
 }

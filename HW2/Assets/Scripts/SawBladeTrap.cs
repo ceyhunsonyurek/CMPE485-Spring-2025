@@ -46,7 +46,7 @@ public class SawBladeTrap : MonoBehaviour
 
     IEnumerator MoveSawBlade()
     {
-        while (true)
+        while (Time.timeScale != 0.7f)
         {
             // Move to end position
             yield return StartCoroutine(MoveToPosition(endPosition));
