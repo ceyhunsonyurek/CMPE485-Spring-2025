@@ -7,6 +7,7 @@ public class KeyPhysics : MonoBehaviour
     [Header("Settings")]
     [Tooltip("Tag of the door object")]
     public string doorTag = "Door";
+    public string trapTag = "Trap";
 
     private bool hasGameEnded = false;
 
@@ -38,11 +39,22 @@ public class KeyPhysics : MonoBehaviour
     }
 
 
-    IEnumerator Wait()
+    IEnumerator Win()
     {
         yield return new WaitForSeconds(2);
 
         gameOverUI.Setup("You Won!", "Play Again");
+
+        // AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameOverScene");
+        // while (!asyncLoad.isDone) { yield return null; }
+    }
+
+
+    IEnumerator Lose()
+    {
+        yield return new WaitForSeconds(1);
+
+        gameOverUI.Setup("You Lost!", "Try Again");
 
         // AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameOverScene");
         // while (!asyncLoad.isDone) { yield return null; }
@@ -57,7 +69,15 @@ public class KeyPhysics : MonoBehaviour
             {
                 hasGameEnded = true;
                 Time.timeScale = 0.7f;
-                StartCoroutine(Wait());
+                StartCoroutine(Win());
+            }
+        } else if (collision.gameObject.CompareTag(trapTag))
+        {
+            if (!hasGameEnded)
+            {
+                hasGameEnded = true;
+                Time.timeScale = 0.8f;
+                StartCoroutine(Lose());
             }
         }
     }

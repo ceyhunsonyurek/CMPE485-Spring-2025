@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Analytics;
 
 /*
     This file has a commented version with details about how each line works. 
@@ -52,6 +53,8 @@ public class ThirdPersonController : MonoBehaviour
     Animator animator;
     CharacterController cc;
     public string trapTag = "Trap";
+
+    public GameOverUI gameOverUI;
 
 
     void Start()
@@ -239,8 +242,19 @@ public class ThirdPersonController : MonoBehaviour
         if (!isDead)
         {
             isDead = true;
-            Debug.Log("Player died!");
+            StartCoroutine(Lose());
         }
+    }
+
+
+    IEnumerator Lose()
+    {
+        yield return new WaitForSeconds(1);
+
+        gameOverUI.Setup("You Lost!", "Try Again");
+
+        // AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("GameOverScene");
+        // while (!asyncLoad.isDone) { yield return null; }
     }
 
 
