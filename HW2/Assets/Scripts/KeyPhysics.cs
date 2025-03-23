@@ -13,9 +13,6 @@ public class KeyPhysics : MonoBehaviour
     [Tooltip("Optional win message text")]
     public UnityEngine.UI.Text winMessageText;
 
-    [Tooltip("Optional sound to play when key hits the door")]
-    public AudioSource collisionSound;
-
     private Rigidbody rb;
 
     void Start()
@@ -46,12 +43,6 @@ public class KeyPhysics : MonoBehaviour
         // Check if the key collided with the door
         if (collision.gameObject.CompareTag(doorTag))
         {
-            // Play collision sound if available
-            if (collisionSound != null)
-            {
-                collisionSound.Play();
-            }
-
             // Show game over UI if available
             if (gameOverUI != null)
             {
@@ -63,9 +54,6 @@ public class KeyPhysics : MonoBehaviour
             {
                 winMessageText.text = "You Won! The key reached the door.";
             }
-
-            // End the game (you can replace this with your own game end logic)
-            Debug.Log("Game Over - Key reached the door!");
 
             // Option 1: Freeze the game but don't reload
             Time.timeScale = 0;

@@ -249,7 +249,6 @@ public class ThirdPersonController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collided with" + collision.gameObject.name);
         // Check if the saw blade collided with the player
         if (collision.gameObject.CompareTag(trapTag))
         {

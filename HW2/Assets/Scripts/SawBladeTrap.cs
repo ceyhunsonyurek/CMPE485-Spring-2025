@@ -84,7 +84,6 @@ public class SawBladeTrap : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collided with" + collision.gameObject.tag);
         // Check if the saw blade collided with the player
         if (collision.gameObject.CompareTag(playerTag))
         {
