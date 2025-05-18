@@ -1,60 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
-public class PoliceFollower : MonoBehaviour
+public class PoliceController : MonoBehaviour
 {
+    private Rigidbody rb;
+    public GameObject police;
+    public Animator animator;
     public Transform player;
-    public float followDistance = 6f;
-
-    private PlayerController playerController;
-    private float currentSpeed;
+    private bool isRunning = true;
 
     void Start()
     {
-        if (player == null)
-        {
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-            {
-                player = playerObj.transform;
-                playerController = player.GetComponent<PlayerController>();
-            }
-        }
-        else
-        {
-            playerController = player.GetComponent<PlayerController>();
-        }
-
-        // Initial position
-        if (player != null)
-        {
-            transform.position = player.position - player.forward * followDistance;
-            transform.forward = player.forward;
-        }
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        if (player != null && playerController != null)
+        
+    }
+    void FixedUpdate()
+    {
+        if (GameManager.isGameOver && isRunning)
         {
-            // Match player speed
-            currentSpeed = playerController.playerSpeed;
+            transform.position = new Vector3(player.position.x + 1.5f, 0, player.position.z - 5);
+            isRunning = false;
+            animator.Play("Run To Stop");
 
-            // Move forward at player's speed
-            transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
-
-            // Maintain follow distance
-            float currentDistance = Vector3.Distance(transform.position, player.position);
-            if (currentDistance < followDistance - 0.5f)
+        }
+        else
+        {
+            if (GameManager.isGameOver)
             {
-                // Too close, slow down slightly
-                transform.Translate(Vector3.forward * -0.5f * Time.deltaTime);
+                rb.velocity = new Vector3(0, 0, 0);
             }
-            else if (currentDistance > followDistance + 0.5f)
+            else
             {
-                // Too far, speed up slightly
-                transform.Translate(Vector3.forward * 0.5f * Time.deltaTime);
+                Vector3 forwardMovement = transform.forward * (PlayerController.playerSpeed - 1);
+                rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, forwardMovement.z);
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!GameManager.isGameOver)
+        {
+            if (collision.gameObject.CompareTag("Obstacle"))
+            {
+                police.SetActive(false);
             }
         }
     }

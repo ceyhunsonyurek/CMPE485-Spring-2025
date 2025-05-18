@@ -6,28 +6,29 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float playerSpeed = 6f;
-    public float playerMaxSpeed = 18f;
-    public float speedIncreaseInterval = 10f;
+    public static float playerSpeed;
+    public float playerMaxSpeed = 20f;
+    public float speedIncreaseInterval = 3f;
     public float speedIncreaseAmount = 0.5f;
     private float timeSinceLastSpeedIncrease = 0f;
-    public float horizontalSpeed = 3f;
+    public float horizontalSpeed = 2f;
     public float rightPos = 3.5f;
     public float centerPos = 0f;
     public float leftPos = -3.5f;
 
     [Header("Jumping Settings")]
-    public float jumpForce = 6f;
-    public float jumpCooldown = 0.9f;
+    public float jumpForce = 3.5f;
+    public float jumpCooldown = 0.8f;
 
     [Header("Sliding Settings")]
-    public float slideTime = 0.8f;
+    public float slideTime = 0.7f;
     public float slideCooldown = 0.1f;
     public float slideColliderHeight = 0.5f;
 
     [Header("References")]
     public Animator animator;
     public CapsuleCollider playerCollider;
+    public GameObject police;
 
     private int currentPos = 1; //0:left 1:center 2:right
     private Rigidbody rb;
@@ -43,6 +44,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        playerSpeed = 10f;
         rb = GetComponent<Rigidbody>();
 
         if (playerCollider == null)
@@ -220,6 +222,7 @@ public class PlayerController : MonoBehaviour
     {
         GameManager.isGameOver = true;
         playerSpeed = 0f;
+        police.SetActive(true);
         animator.Play("Stumble Backwards");
     }
 }

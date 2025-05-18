@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
         public GameObject prefab;
         public int size;
     }
+
     public bool isPoolingActive;
 
     [Header("Player Reference")]
@@ -88,7 +89,7 @@ public class GameManager : MonoBehaviour
                 scoreText.text = "Score: " + currentScore;
                 float distanceMoved = playerCurrentZ - playerLastZ;
 
-                if (distanceMoved >= segmentLength)
+                if (distanceMoved >= 24)
                 {
                     playerLastZ = playerCurrentZ;
                     int randomNumber = Random.Range(0, 2);
